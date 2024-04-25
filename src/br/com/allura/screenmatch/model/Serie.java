@@ -1,6 +1,8 @@
 package br.com.allura.screenmatch.model;
 
-public class Serie extends Titulo {
+import br.com.allura.screenmatch.calculo.Classificacao;
+
+public class Serie extends Titulo implements Classificacao {
     private int temporadas;
     private boolean ativa;
     private int episodiosPorTemporada;
@@ -45,5 +47,15 @@ public class Serie extends Titulo {
     @Override
     public int getDuracaoEmMinutos() {
         return temporadas * episodiosPorTemporada * minutosPorEpisodio;
+    }
+
+    @Override
+    public String toString() {
+        return "Serie: " + this.getNome() + " (" + this.getAnoDeLancamento() + ")";
+    }
+
+    @Override
+    public int getClassificacao() {
+        return (int) obtemMedia() / 2;
     }
 }

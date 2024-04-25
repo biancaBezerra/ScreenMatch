@@ -1,8 +1,12 @@
 package br.com.allura.screenmatch.model;
 
-public class Titulo {
+
+import br.com.allura.screenmatch.excecao.ErroConversaodeAnoException;
+
+public class Titulo implements Comparable<Titulo> {
     private String nome;
     private int anoDeLancamento;
+
     private int duracaoEmMinutos;
     private boolean incluidoNoPlano;
     private double somaAvaliacao;
@@ -11,6 +15,18 @@ public class Titulo {
     public Titulo(String nome, int anoDeLancamento) {
         this.nome = nome;
         this.anoDeLancamento = anoDeLancamento;
+    }
+
+    public Titulo(TituloOmdb meuTituloOmdb) {
+        //código para tirar o min do final do runtime
+        String duracaoSemEspacos = meuTituloOmdb.runtime().replaceAll("\\s*min", "");
+        this.nome = meuTituloOmdb.title();
+        if (meuTituloOmdb.year().length() > 4) {
+            throw  new ErroConversaodeAnoException("Dado com um formato desconecido");
+        }
+        this.anoDeLancamento = Integer.valueOf(meuTituloOmdb.year());
+        this.duracaoEmMinutos = Integer.valueOf(duracaoSemEspacos);
+
     }
 
     public void exibeFichaTecnica() {
@@ -59,5 +75,18 @@ public class Titulo {
 
     public int getTotalDeAvaliacoes(){
         return totalDeAvaliacoes;
+    }
+
+
+    @Override
+    public int compareTo(Titulo outroTitulo) {
+        return this.getNome().compareTo(outroTitulo.getNome());
+    }
+
+    @Override
+    public String toString() {
+        return "Nome: " + nome +
+                ", Ano de lançamento: " + anoDeLancamento +
+                ", Duração em minutos: " + duracaoEmMinutos ;
     }
 }
